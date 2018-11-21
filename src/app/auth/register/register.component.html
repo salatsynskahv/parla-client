@@ -1,0 +1,23 @@
+<div [formGroup]="form">
+
+  <div>
+    <label>Username</label>
+    <input type="text" formControlName="userName">
+  </div>
+  <div>
+    <label>FisrtName</label>
+    <input type="text" formControlName="firstName">
+  </div>
+
+  <label>LastName</label>
+  <input type="text" formControlName="lastName">
+  <br>
+  <label>Password</label>
+  <input type="password" formControlName="password">
+  <br>
+  <label>Repeat password</label>
+  <input type="password" formControlName="repeatPassword">
+  <br>
+  <button (click)="prepareSave()"> Save </button>
+</div>
+<router-outlet></router-outlet>
