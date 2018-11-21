@@ -1,51 +1,22 @@
 import { Injectable } from '@angular/core';
-import {
-  HttpInterceptor,
-  HttpRequest,
-  HttpHandler,
-  HttpSentEvent,
-  HttpHeaderResponse,
-  HttpProgressEvent,
-  HttpResponse,
-  HttpUserEvent,
-  HttpEvent,
-  HttpErrorResponse
-} from '@angular/common/http';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { TokenStorage } from './token-storage';
+import {HttpInterceptor, HttpRequest, HttpHandler} from '@angular/common/http';
 import { Router } from '@angular/router';
+import {TokenStorage} from './token-storage';
+import {Observable} from 'rxjs';
 
-const TOKEN_HEADER_KEY = 'X-AUTH-TOKEN';
+const TOKEN_HEADER_KEY = 'Authorization';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
 
   constructor(private token: TokenStorage, private router: Router) { }
 
-  intercept(req: HttpRequest<any>, next: HttpHandler):
-    Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
-
-    return next.handle(req).pipe(tap(
-      (event: HttpEvent<any>) => {
-        if (event instanceof HttpResponse) {
-          const token = event.headers.get(TOKEN_HEADER_KEY);
-          if (token) {
-            console.log('saving token ::' + token);
-            this.token.save(token);
-          }
-        }
-      },
-      (err: any) => {
-        if (err instanceof HttpErrorResponse) {
-          console.log(err);
-          console.log('req url :: ' + req.url);
-          if (!req.url.endsWith('/auth/user') && err.status === 401) {
-            this.router.navigate(['', 'auth', 'signin']);
-          }
-        }
-      }
-    ));
+  intercept(req: HttpRequest<any>, next: HttpHandler): Observable<any> {
+   let authReq = req;
+   if (this.token.getToken() != null) {
+     authReq = req.clone({ headers: req.headers.set(TOKEN_HEADER_KEY, 'Bearer ' + this .token.getToken())});
+   }
+   return next.handle(authReq);
   }
 
 }

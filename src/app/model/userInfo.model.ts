@@ -1,8 +1,9 @@
-export class UserInfo implements Deserializable {
-  username: string;
+export class UserInfoModel implements Deserializable {
+  userName: string;
   firstName: string;
-  surname: string;
-  dateOfBirth: string;
+  lastName: string;
+  password: string;
+  email: string;
   languages: string;
   nativeLanguage: string;
 

@@ -20,6 +20,9 @@ import {
   MatGridListModule,
   MatDialogModule
 } from '@angular/material';
+import { HeaderComponent } from './layout/header.component';
+import { FooterComponent } from './layout/footer.component';
+import {AppRoutingModule} from '../app-routing.module';
 
 // import { ShowAuthedDirective } from './show-authed.directive';
 // import { Nl2brPipe } from './nl2br.pipe';
@@ -50,18 +53,19 @@ const FLEX_LAYOUT_MODULES: any[] = [FlexLayoutModule];
 @NgModule({
   imports: [
     CommonModule,
+    AppRoutingModule,
     ANGULAR_MODULES,
     MATERIAL_MODULES,
     FLEX_LAYOUT_MODULES
   ],
   exports: [
     CommonModule,
+    FooterComponent,
+    HeaderComponent,
     ANGULAR_MODULES,
     MATERIAL_MODULES,
-    FLEX_LAYOUT_MODULES,
-    // ShowAuthedDirective,
-    // Nl2brPipe
+    FLEX_LAYOUT_MODULES
   ],
-  declarations: []
+  declarations: [HeaderComponent, FooterComponent]
 })
 export class SharedModule {}

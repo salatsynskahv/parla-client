@@ -7,16 +7,18 @@ export class TokenStorage {
 
   constructor() { }
 
-  save(token) {
-    window.localStorage[TOKEN_KEY] = token;
+  signOut() {
+    window.sessionStorage.removeItem(TOKEN_KEY);
+    window.sessionStorage.clear();
   }
 
-  get() {
-    return window.localStorage[TOKEN_KEY];
+  public save(token: string) {
+    window.sessionStorage.removeItem(TOKEN_KEY);
+    window.sessionStorage.setItem(TOKEN_KEY,  token);
   }
 
-  destroy() {
-    window.localStorage.removeItem(TOKEN_KEY);
+  public getToken(): string {
+    return sessionStorage.getItem(TOKEN_KEY);
   }
 
 }

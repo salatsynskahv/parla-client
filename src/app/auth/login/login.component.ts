@@ -1,11 +1,10 @@
-///<reference path="../../../../node_modules/@angular/core/src/metadata/directives.d.ts"/>
-import {Component, Inject, OnInit} from '@angular/core';
-import { AuthService } from '../../core/auth.service';
-import { Router } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
 import { Subscription } from 'rxjs';
 import {FormBuilder, FormGroup, NgForm} from '@angular/forms';
-import {TokenStorage} from '../../core/token-storage';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material';
+import {AuthService} from '../../core/auth.service';
+import {Router} from '@angular/router';
+import {TokenStorage} from '../../core/token-storage';
 
 @Component({
   selector: 'app-login',
@@ -18,30 +17,29 @@ export class LoginComponent implements OnInit {
   private password = '';
   errorMessage = '';
   form: FormGroup;
-  description: string;
+  formBuilder: FormBuilder;
+  authService: AuthService;
 
   sub: Subscription = null;
 
-  constructor(private auth: AuthService, private router: Router, private token: TokenStorage, private fb: FormBuilder,
-              private dialogRef: MatDialogRef<LoginComponent>,
-              @Inject(MAT_DIALOG_DATA) data
-              ) { }
+  constructor(private fb: FormBuilder, private auth: AuthService, private tokenStorage: TokenStorage,
+              private router: Router) {
+     this.formBuilder = fb;
+     this.authService = auth;
+  }
 
   ngOnInit() {
     console.log('calling ngOnInit...');
+    this.form = this.formBuilder.group(
+      {username:  [this.username],
+      password: [this.password]});
   }
 
-  submit(f: NgForm) {
-    console.log('calling submit...');
-    this.auth.attemptAuth(this.username, this.password).subscribe( data => {
-      this.token.save(data.token);
-      this.router.navigate(['user']);
+  submit() {
+    this.authService.attemptAuth(this.form.value.username, this.form.value.password).subscribe(data => {
+      this.tokenStorage.save(data.token);
+      this.router.navigate(['home']);
     });
-    return false;
-  }
-
-  close() {
-    this.dialogRef.close();
   }
 
 }
